@@ -113,7 +113,7 @@ for item in items:
     
     if item.get("link"):
         guid = SubElement(entry, "guid")
-        guid.set("isPermalink", "false")
+        guid.set("isPermalink", "true")
         guid.text = item["link"]
 
 ElementTree(rss).write("cbi.xml", encoding="utf-8", xml_declaration=True)
