@@ -41,9 +41,6 @@ for article in articles:
                 datetime.strptime(date_element.get_text(strip=True), "%d/%m/%Y -").replace(hour=now.hour, minute=now.minute, second=now.second, tzinfo=timezone.utc)
             )
     
-    # author_element = article.select_one("span.author.vcard > a")
-    # author = author_element.get_text()
-    
     img_element = article.select_one("img")
     img = img_element.get("src")
     
@@ -52,7 +49,6 @@ for article in articles:
         "link": link,
         "description": desc,
         "pubDate": date,
-        # "author": author,
         "image": img,
     })
 

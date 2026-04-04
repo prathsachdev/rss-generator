@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
 from email.utils import format_datetime
-from datetime import datetime
+from datetime import datetime, timezone
 from xml.etree.ElementTree import Element, SubElement, ElementTree, register_namespace
 import cloudscraper
+from urllib.parse import urljoin
 
 URL = "https://idrw.org"
 
@@ -25,8 +26,10 @@ articles = soup.select("article.art-post.art-article.post.type-post.status-publi
 print("Articles found:", len(articles))
 
 for article in articles:
+    now = datetime.now(timezone.utc)
+    
     link_element = article.select_one("h2.art-postheader.entry-title > a")
-    link = link_element.get("href")
+    link = urljoin(URL, link_element.get("href"))
     
     title = link_element.get_text(strip=True)
     
@@ -35,7 +38,7 @@ for article in articles:
     
     date_element = article.select_one("span.entry-date.updated")
     date = format_datetime(
-                datetime.strptime(date_element.get_text(strip=True), "%B %d, %Y").replace(hour=12)
+                datetime.strptime(date_element.get_text(strip=True), "%B %d, %Y").replace(hour=now.hour, minute=now.minute, second=now.second, tzinfo=timezone.utc)
             )
     
     author_element = article.select_one("span.author.vcard > a")
@@ -86,28 +89,35 @@ SubElement(image, "title").text = "Indian Defence Research Wing"
 
 for item in items:
     entry = SubElement(channel, "item")
-
-    title = SubElement(entry, "title")
-    title.text = item["title"]
     
-    link = SubElement(entry, "link")
-    link.text = item["link"]
+    if item.get("title"):
+        title = SubElement(entry, "title")
+        title.text = item["title"]
     
-    description = SubElement(entry, "description")
-    description.text = item["description"]
+    if item.get("link"):
+        link = SubElement(entry, "link")
+        link.text = item["link"]
     
-    pubDate = SubElement(entry, "pubDate")
-    pubDate.text = item["pubDate"]
+    if item.get("description"):
+        description = SubElement(entry, "description")
+        description.text = item["description"]
     
-    author = SubElement(entry, "{http://purl.org/dc/elements/1.1/}creator")
-    author.text = item["author"]
+    if item.get("pubDate"):
+        pubDate = SubElement(entry, "pubDate")
+        pubDate.text = item["pubDate"]
     
-    image = SubElement(entry, "{http://search.yahoo.com/mrss/}content")
-    image.set("url", item["image"])
-    image.set("medium", "image")
+    if item.get("author"):
+        author = SubElement(entry, "{http://purl.org/dc/elements/1.1/}creator")
+        author.text = item["author"]
     
-    guid = SubElement(entry, "guid")
-    guid.set("isPermalink", "false")
-    guid.text = item["link"]
+    if item.get("image"):
+        image = SubElement(entry, "{http://search.yahoo.com/mrss/}content")
+        image.set("url", item["image"])
+        image.set("medium", "image")
+    
+    if item.get("link"):
+        guid = SubElement(entry, "guid")
+        guid.set("isPermalink", "false")
+        guid.text = item["link"]
 
 ElementTree(rss).write("idrw.xml", encoding="utf-8", xml_declaration=True)
