@@ -28,6 +28,7 @@ jobs:
         run: |
           python idrw_scraper.py
           python cbi_scraper.py
+        continue-on-error: true
 
       - name: Commit xml files
         run: |
