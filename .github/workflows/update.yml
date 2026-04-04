@@ -2,7 +2,7 @@ name: Update RSS
 
 on:
   schedule:
-    - cron: "0 * * * *"   # every 1 hr
+    - cron: "0 */6 * * *"   # every 1 hr
   workflow_dispatch:         # manual trigger button
 
 jobs:
