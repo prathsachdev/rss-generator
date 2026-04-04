@@ -68,8 +68,8 @@ register_namespace("dc", "http://purl.org/dc/elements/1.1/")
 channel = SubElement(rss, "channel")
 
 SubElement(channel, "title").text = "Indian Defence Research Wing"
-SubElement(channel, "link").text = URL
 SubElement(channel, "description").text = "INDIAN DEFENCE NEWS, LATEST DEFENCE NEWS, INDIAN ARMY, INDIAN AIR FORCE, INDIAN NAVY, DEFENSE NEWS"
+SubElement(channel, "link").text = URL
 SubElement(channel, "{http://www.w3.org/2005/Atom}link", {
     "href": URL,
     "rel": "self",
