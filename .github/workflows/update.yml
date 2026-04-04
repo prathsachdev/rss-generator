@@ -24,13 +24,15 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run scraper
-        run: python idrw_scraper.py
+      - name: Run scrapers
+        run: |
+          python idrw_scraper.py
+          python cbi_scraper.py
 
-      - name: Commit idrw.xml
+      - name: Commit xml files
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add -f idrw.xml
+          git add -f *.xml
           git commit -m "Update RSS" || echo "No changes"
           git push
