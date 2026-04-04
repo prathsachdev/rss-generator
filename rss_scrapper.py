@@ -3,11 +3,16 @@ from bs4 import BeautifulSoup
 from email.utils import format_datetime
 from datetime import datetime
 from xml.etree.ElementTree import Element, SubElement, ElementTree
+import cloudscraper
 
 URL = "https://idrw.org"
 
 # Scraping
-html = requests.get(URL, timeout=10).text
+scraper = cloudscraper.create_scraper(
+    browser={"browser": "chrome", "platform": "windows"}
+)
+
+html = scraper.get(URL, timeout=10).text
 soup = BeautifulSoup(html, "lxml")
 
 print("Fetched length:", len(html))
