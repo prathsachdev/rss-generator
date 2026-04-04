@@ -2,7 +2,7 @@ name: Update RSS
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # every 30 minutes
+    - cron: "0 * * * *"   # every 1 hr
   workflow_dispatch:         # manual trigger button
 
 jobs:
@@ -31,6 +31,6 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add rss.xml
+          git add idrw.xml
           git commit -m "Update RSS" || echo "No changes"
           git push
