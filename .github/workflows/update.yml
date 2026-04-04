@@ -1,0 +1,36 @@
+name: Update RSS
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # every 30 minutes
+  workflow_dispatch:         # manual trigger button
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scraper
+        run: python rss_scrapper.py
+
+      - name: Commit idrw.xml
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add rss.xml
+          git commit -m "Update RSS" || echo "No changes"
+          git push
