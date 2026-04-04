@@ -10,9 +10,14 @@ URL = "https://idrw.org"
 html = requests.get(URL, timeout=10).text
 soup = BeautifulSoup(html, "lxml")
 
+print("Fetched length:", len(html))
+
 items = []
 
-for article in soup.select("article.art-post.art-article.post.type-post.status-publish.format-standard"):
+articles = soup.select("article.art-post.art-article.post.type-post.status-publish.format-standard")
+print("Articles found:", len(articles))
+
+for article in articles:
     link_element = article.select_one("h2.art-postheader.entry-title > a")
     link = link_element.get("href")
     
