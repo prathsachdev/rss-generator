@@ -23,27 +23,28 @@ try:
 
     items = []
 
-    articles = soup.select("article.art-post.art-article.post.type-post.status-publish.format-standard")
+    articles = soup.select("div.gridmode-grid-post-inside")
     print("Articles found:", len(articles))
 
     for article in articles:
-        link_element = article.select_one("h2.art-postheader.entry-title > a")
+        title_element = article.select_one("h3.gridmode-grid-post-title")
+        title = title_element.get_text(strip=True)
+        
+        link_element = article.select_one("h3.gridmode-grid-post-title > a")
         link = urljoin(URL, link_element.get("href"))
         
-        title = link_element.get_text(strip=True)
-        
-        desc_element = article.select_one("div.art-postcontent > p:nth-child(3)")
+        desc_element = article.select_one("p")
         desc = desc_element.get_text(strip=True)
         
-        date_element = article.select_one("span.entry-date.updated")
+        date_element = article.select_one("span.gridmode-grid-post-date")
         date = format_datetime(
                     datetime.strptime(date_element.get_text(strip=True), "%B %d, %Y").replace(hour=0, minute=0, second=0, tzinfo=timezone.utc)
                 )
         
-        author_element = article.select_one("span.author.vcard > a")
+        author_element = article.select_one("span.gridmode-grid-post-author > a")
         author = author_element.get_text()
         
-        img_element = article.select_one("img")
+        img_element = article.select_one("img.gridmode-grid-post-thumbnail-img")
         img = img_element.get("data-src")
         
         items.append({
